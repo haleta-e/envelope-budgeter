@@ -11,20 +11,35 @@
     <main>
       <h1>Envelope Budgeter</h1>
       <div class="container">
-        <form id="budget-form">
+        <!-- novalidate: our JavaScript does the validation so every message
+             looks the same and nothing depends on browser-specific popups. -->
+        <form id="budget-form" novalidate>
           <label for="income">Total Monthly Income</label>
-          <input 
-            type="number" 
-            min="0" 
-            id="income" 
-            placeholder="e.g. 2000" 
-            required 
+          <input
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            id="income"
+            placeholder="e.g. 2000"
+            aria-describedby="amount-hint"
+            required
           />
+          <p id="amount-hint" class="hint">
+            Enter plain numbers such as 25 or 25.50 (no negatives, commas or
+            scientific notation).
+          </p>
 
           <fieldset id="rent">
             <legend>Rent</legend>
             <label for="rent-amount">Amount</label>
-            <input type="number" min="0" id="rent-amount" placeholder="e.g. 1000" />
+            <input
+              type="text"
+              inputmode="decimal"
+              autocomplete="off"
+              id="rent-amount"
+              placeholder="e.g. 1000"
+              aria-describedby="amount-hint"
+            />
           </fieldset>
 
           <fieldset id="food">
@@ -55,16 +70,26 @@
           </div>
 
           <div>
-            <button type="submit">
-              Calculate Remaining Budget
-            </button>
+            <button type="submit">Calculate Remaining Budget</button>
             <button type="button" id="clear">Clear</button>
           </div>
+
+          <div
+            id="error-summary"
+            class="error-summary hide"
+            role="alert"
+            tabindex="-1"
+          ></div>
         </form>
 
-        <div id="output" class="output hide"></div>
+        <div
+          id="output"
+          class="output hide"
+          role="status"
+          aria-live="polite"
+        ></div>
       </div>
     </main>
-    <script src="./script.js"></script>
+    <script src="./script.js" defer></script>
   </body>
 </html>

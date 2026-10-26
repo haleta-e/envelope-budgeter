@@ -7,6 +7,8 @@
   --light-pink: #ffadad;
   --dark-red: #850000;
   --light-green: #acd157;
+  --muted-text: #d0d0d5;
+  --row-border: #3b3b4f;
 }
 
 body {
@@ -26,6 +28,7 @@ h1 {
 }
 
 .container {
+  box-sizing: border-box; /* include padding in the 90% width (fixes mobile overflow) */
   width: 90%;
   max-width: 680px;
   margin: 20px auto;
@@ -52,11 +55,39 @@ legend {
   padding: 0 8px;
 }
 
+.hint {
+  font-size: 0.85em;
+  color: var(--muted-text);
+  margin: 4px 0 16px;
+}
+
 .input-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 10px;
+}
+
+/* Helpful empty state: shown only while a category has no expenses */
+.input-container:empty::before {
+  content: "No expenses yet. Use \"Add expense to\" below.";
+  font-size: 0.9em;
+  color: var(--muted-text);
+}
+
+/* One expense = name field + amount field + delete button */
+.expense-row {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--row-border);
+  border-radius: 6px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 input,
@@ -74,7 +105,14 @@ input:focus,
 select:focus,
 button:focus {
   outline: 2px solid var(--light-yellow);
+  outline-offset: 2px;
   border-color: var(--dark-yellow);
+}
+
+/* Invalid fields get a thicker border; the error text explains the problem,
+   so colour is not the only signal. */
+input[aria-invalid="true"] {
+  border: 2px solid var(--light-pink);
 }
 
 button {
@@ -82,12 +120,25 @@ button {
   text-decoration: none;
   background-color: var(--light-yellow);
   border: 2px solid var(--dark-yellow);
+  color: var(--dark-blue);
   transition: background-color 0.2s ease, border 0.2s ease;
 }
 
+/* The old hover colour (white on yellow) was hard to read. */
 button:hover {
   background-color: var(--dark-yellow);
-  color: white;
+  color: var(--dark-blue);
+}
+
+.delete-button {
+  background-color: var(--light-pink);
+  border-color: var(--dark-red);
+  color: var(--dark-red);
+}
+
+.delete-button:hover {
+  background-color: var(--dark-red);
+  color: var(--light-grey);
 }
 
 .controls {
@@ -99,6 +150,24 @@ button:hover {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.error-summary {
+  border: 2px solid var(--light-pink);
+  border-radius: 6px;
+  padding: 12px 15px;
+  margin-top: 20px;
+}
+
+.error-summary p {
+  margin: 0 0 6px;
+  font-weight: bold;
+  color: var(--light-pink);
+}
+
+.error-summary ul {
+  margin: 0;
+  padding-left: 20px;
 }
 
 .output {
@@ -125,6 +194,13 @@ button:hover {
 
 .hide {
   display: none;
+}
+
+@media (min-width: 601px) {
+  .expense-row {
+    grid-template-columns: 2fr 1fr auto;
+    align-items: end;
+  }
 }
 
 @media (max-width: 600px) {
